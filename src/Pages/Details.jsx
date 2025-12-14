@@ -338,7 +338,8 @@ const Details = () => {
     };
 
     return (
-        < div className='bg-black'>
+       <div className="bg-black pt-[180px] md:pt-0">
+
             <Navbar />
             <div className="min-h-screen bg-[#121212] text-white font-sans bg-black">
                 {/* Hero Section */}
@@ -355,9 +356,9 @@ const Details = () => {
                     </div>
 
                     <div className="relative container mx-auto px-4 h-full flex items-end pb-12 lg:pb-20">
-                        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-end w-full">
+                        <div className=" flex flex-col lg:flex-row gap-8 lg:gap-16 items-end w-full">
                             {/* Poster Card */}
-                            <div className="hidden lg:block flex-shrink-0 w-[300px] xl:w-[350px] relative group perspective-1000">
+                            <div className=" hidden lg:block flex-shrink-0 w-[300px] xl:w-[350px] relative group perspective-1000">
                                 <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-500 transform group-hover:scale-105 group-hover:rotate-y-6">
                                     <img
                                         alt={selectedItem.nameArabic}
@@ -371,11 +372,23 @@ const Details = () => {
                             {/* Content Info */}
                             <div className="flex-1 space-y-6 lg:mb-8">
                                 {/* Mobile Poster (Visible only on small screens) */}
-                                <img
-                                    alt={selectedItem.nameArabic}
-                                    className="w-60 h-80 mr-40 block md:hidden"
-                                    src={selectedItem.posterUrl || selectedItem.posterImage?.url || 'https://via.placeholder.com/200x300?text=No+Image'}
-                                />
+                                    <img
+                                                alt={selectedItem.nameArabic}
+                                                src={
+                                                    selectedItem.posterUrl ||
+                                                    selectedItem.posterImage?.url ||
+                                                    'https://via.placeholder.com/200x300?text=No+Image'
+                                                }
+                                                className="
+                                                    block md:hidden
+                                                    object-cover 
+                                                    w-32 h-48        /* mobile */
+                                                    sm:w-40 sm:h-60  /* small */
+                                                    md:w-48 md:h-72  /* tablets (لو شلت md:hidden) */
+                                                    mx-auto          /* توسيط */
+                                                "
+                                    />
+
 
 
                                 {/* Title & Badges */}
