@@ -338,13 +338,12 @@ const Details = () => {
     };
 
     return (
-       <div className="bg-black pt-[180px] md:pt-0">
+       <div className="bg-black pt-[200px] md:pt-0 ">
 
             <Navbar />
             <div className="min-h-screen bg-[#121212] text-white font-sans bg-black">
                 {/* Hero Section */}
-                <div className="relative w-full h-[85vh] lg:h-[90vh]">
-                    {/* Background Image with Parallax-like effect */}
+                        {/* Background Image with Parallax-like effect */}
                     <div className="absolute inset-0 overflow-hidden">
                         <img
                             alt={selectedItem.nameArabic}
@@ -354,6 +353,7 @@ const Details = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent" />
                         <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/60 to-transparent" />
                     </div>
+                <div className="relative w-full h-[85vh] lg:h-[90vh]">
 
                     <div className="relative container mx-auto px-4 h-full flex items-end pb-12 lg:pb-20">
                         <div className=" flex flex-col lg:flex-row gap-8 lg:gap-16 items-end w-full">
