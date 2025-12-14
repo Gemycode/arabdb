@@ -148,17 +148,30 @@ const Navbar = () => {
                     <div className="flex justify-between items-center h-full">
 
                         {/* Logo Section */}
-                        <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer group" onClick={() => navigate('/')}>
+                       <div
+                            className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
+                            onClick={() => navigate('/')}
+                            >
                             <div className="relative">
                                 <div className="absolute -inset-2 bg-amber-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                                 <img
-                                    src={logo}
-                                    alt="Logo"
-                                    style={{ width: "100px", height: "100px" }}
-                                    className="object-contain relative z-10 transform transition-transform duration-500 group-hover:scale-110 drop-shadow-2xl"
+                                src={logo}
+                                alt="Logo"
+                                className="
+                                    object-contain relative z-10
+                                    transition-transform duration-500 group-hover:scale-110
+                                    drop-shadow-2xl
+                                    w-12 h-12          /* mobile */
+                                    sm:w-14 sm:h-14    /* small screens */
+                                    md:w-16 md:h-16    /* tablets */
+                                    lg:w-20 lg:h-20    /* laptops */
+                                    xl:w-24 xl:h-24    /* large screens */
+                                "
                                 />
                             </div>
-                        </div>
+                      </div>
+
 
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center justify-center flex-1 mx-8">
