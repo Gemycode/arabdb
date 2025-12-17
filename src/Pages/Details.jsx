@@ -28,6 +28,7 @@ const Details = () => {
 
     useEffect(() => {
         if (id) {
+            window.scrollTo(0, 0);
             dispatch(fetchItemById(id));
         }
     }, [dispatch, id]);
@@ -338,21 +339,21 @@ const Details = () => {
     };
 
     return (
-       <div className="bg-black pt-[200px] md:pt-0 ">
+        <div className="bg-black pt-[200px] md:pt-0 ">
 
             <Navbar />
             <div className="min-h-screen bg-[#121212] text-white font-sans bg-black">
                 {/* Hero Section */}
-                        {/* Background Image with Parallax-like effect */}
-                    <div className="absolute inset-0 overflow-hidden">
-                        <img
-                            alt={selectedItem.nameArabic}
-                            className="w-full h-full object-cover blur-sm scale-105 opacity-60"
-                            src={selectedItem.posterUrl || selectedItem.posterImage?.url || 'https://via.placeholder.com/800x600?text=No+Image'}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/60 to-transparent" />
-                    </div>
+                {/* Background Image with Parallax-like effect */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <img
+                        alt={selectedItem.nameArabic}
+                        className="w-full h-full object-cover blur-sm scale-105 opacity-60"
+                        src={selectedItem.posterUrl || selectedItem.posterImage?.url || 'https://via.placeholder.com/800x600?text=No+Image'}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/60 to-transparent" />
+                </div>
                 <div className="relative w-full h-[85vh] lg:h-[90vh]">
 
                     <div className="relative container mx-auto px-4 h-full flex items-end pb-12 lg:pb-20">
@@ -372,14 +373,14 @@ const Details = () => {
                             {/* Content Info */}
                             <div className="flex-1 space-y-6 lg:mb-8">
                                 {/* Mobile Poster (Visible only on small screens) */}
-                                    <img
-                                                alt={selectedItem.nameArabic}
-                                                src={
-                                                    selectedItem.posterUrl ||
-                                                    selectedItem.posterImage?.url ||
-                                                    'https://via.placeholder.com/200x300?text=No+Image'
-                                                }
-                                                className="
+                                <img
+                                    alt={selectedItem.nameArabic}
+                                    src={
+                                        selectedItem.posterUrl ||
+                                        selectedItem.posterImage?.url ||
+                                        'https://via.placeholder.com/200x300?text=No+Image'
+                                    }
+                                    className="
                                                     block md:hidden
                                                     object-cover 
                                                     w-32 h-48        /* mobile */
@@ -387,7 +388,7 @@ const Details = () => {
                                                     md:w-48 md:h-72  /* tablets (لو شلت md:hidden) */
                                                     mx-auto          /* توسيط */
                                                 "
-                                    />
+                                />
 
 
 
