@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Star, Play, Share2 } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFilms, fetchSeries, fetchAverageRatings } from '../redux/moviesSlice';
-import AddToFavoritesButton from '../componet/AddToFavoritesButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -45,21 +44,6 @@ const MostRated = () => {
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 10);
   }, [allWorks, ratings]);
-
-  const handleShareClick = (e, movie) => {
-    e.stopPropagation();
-    const shareUrl = `${window.location.origin}/Details/${movie._id}`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: movie.nameArabic,
-        url: shareUrl
-      });
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert('تم نسخ الرابط!');
-    }
-  };
 
   const renderStars = (rating) => {
     const stars = [];
@@ -121,12 +105,13 @@ const MostRated = () => {
         {topRatedWorks.map((movie, index) => {
           const imageState = imageStates[movie._id] || { loaded: false, error: false };
           return (
-            <SwiperSlide key={index} style={{ paddingBottom: `60px` }}>
-              <div
-                className="group card-hover bg-card border border-white/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-amber-300/100 hover:-translate-y-2 text-white w-full max-w-[180px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[260px] xl:max-w-[280px] mx-auto z-10"
+            <SwiperSlide key={index} className="!h-auto" style={{ paddingBottom: `60px`, height: 'auto' }}>
+              <Link
+                to={`/Details/${movie._id}`}
+                className="group card-hover bg-card border border-white/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-amber-300/100 hover:-translate-y-2 text-white w-full max-w-[180px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[260px] xl:max-w-[280px] mx-auto z-10 flex flex-col h-full cursor-pointer"
                 style={{ backgroundColor: 'var(--color-dark)' }}
               >
-                <div className="block cursor-pointer" role="button">
+                <div className="block h-full flex flex-col" role="button">
                   <div className="relative aspect-[2/3] overflow-hidden">
                     {!imageState.loaded && !imageState.error && (
                       <div className="absolute inset-0 bg-muted animate-pulse flex items-center justify-center">
@@ -148,22 +133,6 @@ const MostRated = () => {
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 sm:gap-4 md:gap-6">
-                        <Link to={`/Details/${movie._id}`}>
-                          <button className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
-                            <Play size={24} className="fill-current sm:w-[30px] sm:h-[30px]" />
-                          </button>
-                        </Link>
-
-                        <AddToFavoritesButton workId={movie._id} />
-
-                        <button
-                          onClick={(e) => handleShareClick(e, movie)}
-                          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white/20 hover:bg-white/30 text-blue-700 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
-                        >
-                          <Share2 size={24} className="sm:w-[30px] sm:h-[30px]" />
-                        </button>
-                      </div>
                     </div>
 
                     {movie.rating > 0 && (
@@ -182,7 +151,7 @@ const MostRated = () => {
                     )}
                   </div>
 
-                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                     <div>
                       <h3 className="font-bold text-foreground text-base sm:text-lg md:text-xl lg:text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
                         {movie?.nameArabic}
@@ -191,7 +160,7 @@ const MostRated = () => {
                         {movie?.nameEnglish}
                       </p>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center text-amber-300 space-x-1 space-x-reverse">
                         {ratingsLoading ? (
                           <div className="animate-pulse bg-gray-600 h-3 sm:h-4 w-12 sm:w-16 rounded"></div>
@@ -211,7 +180,7 @@ const MostRated = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           );
         })}

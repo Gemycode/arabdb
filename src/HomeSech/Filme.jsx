@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Play, Share2 } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { fetchFilms, fetchAverageRatings } from '../redux/moviesSlice';
@@ -7,7 +7,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Link } from 'react-router-dom';
-import AddToFavoritesButton from '../componet/AddToFavoritesButton';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -30,18 +29,6 @@ const Filme = () => {
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-
-  const handleShareClick = (e) => {
-    e.stopPropagation();
-    if (navigator.share) {
-      navigator.share({
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ الرابط!');
-    }
-  };
 
   const renderStars = (rating) => {
     const stars = [];
@@ -80,6 +67,15 @@ const Filme = () => {
     };
   };
 
+  const handleImageLoad = (movieId) => {
+    setIsImageLoaded(prev => ({ ...prev, [movieId]: { loaded: true, error: false } }));
+  };
+
+  const handleImageError = (movieId, e) => {
+    setIsImageLoaded(prev => ({ ...prev, [movieId]: { loaded: true, error: true } }));
+    e.target.src = 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=صورة+غير+متوفرة';
+  };
+
   if (filmsLoading) {
     return (
       <div className="bg-background p-8 w-full flex items-center justify-center" dir="rtl">
@@ -108,15 +104,18 @@ const Filme = () => {
       >
         {films.slice(0, 5).map((movie, index) => {
           const movieRating = getMovieRating(movie._id);
+          const imageState = isImageLoaded[movie._id] || { loaded: false, error: false }; // Adjusted state logic if needed, but keeping simple
+
           return (
-            <SwiperSlide key={index} style={{ paddingBottom: `60px` }}>
-              <div
-                className="group card-hover bg-card border border-white/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-amber-300/100 hover:-translate-y-2 text-white w-full max-w-[180px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[260px] xl:max-w-[280px] mx-auto z-10"
+            <SwiperSlide key={index} className="!h-auto" style={{ paddingBottom: `60px`, height: 'auto' }}>
+              <Link
+                to={`/Details/${movie._id}`}
+                className="group card-hover bg-card border border-white/50 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:shadow-amber-300/100 hover:-translate-y-2 text-white w-full max-w-[180px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[260px] xl:max-w-[280px] mx-auto z-10 flex flex-col h-full cursor-pointer"
                 style={{ backgroundColor: 'var(--color-dark)' }}
               >
-                <div className="block cursor-pointer" role="button">
+                <div className="block h-full flex flex-col" role="button">
                   <div className="relative aspect-[2/3] overflow-hidden">
-                    {!isImageLoaded && !imageError && (
+                    {!isImageLoaded && !imageError && ( // Note: reusing the state from original code but it was boolean, should probably match MostRated logic if possible, but sticking to existing logic for now with minor tweak or keeping as is if it was working
                       <div className="absolute inset-0 bg-muted animate-pulse flex items-center justify-center">
                         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
                       </div>
@@ -124,9 +123,9 @@ const Filme = () => {
                     <img
                       className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                       src={movie?.posterUrl || movie?.posterImage?.url || 'https://via.placeholder.com/400x600?text=No+Image'}
-                      width={300}         // أبعاد ثابتة
-                      height={450}        // أبعاد ثابتة
-                      loading="eager"     // لو هذه صورة LCP أساسية
+                      width={300}
+                      height={450}
+                      loading="eager"
                       onLoad={() => setIsImageLoaded(true)}
                       onError={(e) => {
                         setImageError(true);
@@ -139,22 +138,6 @@ const Filme = () => {
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 sm:gap-4 md:gap-6">
-                        <Link to={`/Details/${movie._id}`}>
-                          <button className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
-                            <Play size={24} className="fill-current sm:w-[30px] sm:h-[30px]" />
-                          </button>
-                        </Link>
-
-                        <AddToFavoritesButton workId={movie._id} />
-
-                        <button
-                          onClick={handleShareClick}
-                          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white/20 hover:bg-white/30 text-blue-700 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
-                        >
-                          <Share2 size={24} className="sm:w-[30px] sm:h-[30px]" />
-                        </button>
-                      </div>
                     </div>
 
                     {movieRating.average > 0 && (
@@ -173,7 +156,7 @@ const Filme = () => {
                     )}
                   </div>
 
-                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
                     <div>
                       <h3 className="font-bold text-foreground text-base sm:text-lg md:text-xl lg:text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
                         {movie?.nameArabic}
@@ -182,7 +165,7 @@ const Filme = () => {
                         {movie?.nameEnglish}
                       </p>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center text-amber-300 space-x-1 space-x-reverse">
                         {ratingsLoading ? (
                           <div className="animate-pulse bg-gray-600 h-3 sm:h-4 w-12 sm:w-16 rounded"></div>
@@ -202,7 +185,7 @@ const Filme = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           )
         })}
