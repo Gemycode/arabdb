@@ -3,11 +3,11 @@ import { Star, Play, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FavoriteButton from './FavoriteButton';
 
-const MediaCard = ({ 
-  work, 
-  onFavoriteChange, 
+const MediaCard = ({
+  work,
+  onFavoriteChange,
   showFavoriteButton = true,
-  className = "" 
+  className = ""
 }) => {
   const navigate = useNavigate();
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -20,7 +20,7 @@ const MediaCard = ({
   const handleShareClick = (e) => {
     e.stopPropagation();
     const shareUrl = `${window.location.origin}/details/${work._id}`;
-    
+
     if (navigator.share) {
       navigator.share({
         title: work.nameArabic,
@@ -45,9 +45,8 @@ const MediaCard = ({
         <Star
           key={i}
           size={14}
-          className={`lucide lucide-star fill-current text-primary transition-colors duration-200 ${
-            isFilled ? '' : isHalf ? 'opacity-75' : 'opacity-50'
-          }`}
+          className={`lucide lucide-star fill-current text-primary transition-colors duration-200 ${isFilled ? '' : isHalf ? 'opacity-75' : 'opacity-50'
+            }`}
         />
       );
     }
@@ -77,9 +76,8 @@ const MediaCard = ({
           )}
           <img
             alt={work.nameArabic}
-            className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
-              isImageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${isImageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
             loading="lazy"
             src={work.posterUrl || 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=صورة+غير+متوفرة'}
             onLoad={() => setIsImageLoaded(true)}
@@ -90,7 +88,7 @@ const MediaCard = ({
           />
 
           <div className="absolute top-2 right-2 bg-amber-300 backdrop-blur-sm rounded-lg px-3 text-black font-extrabold py-1 transition-all duration-300 group-hover:bg-amber-400">
-            <span className="text-primary-foreground text-base font-bold">
+            <span className="text-primary-foreground text-[8px] sm:text-base font-bold">
               {work.type === 'film' ? 'فيلم' : 'مسلسل'}
             </span>
           </div>
@@ -135,19 +133,19 @@ const MediaCard = ({
 
         <div className="p-4 space-y-3">
           <div>
-            <h3 className="font-bold text-foreground text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
+            <h3 className="font-bold text-foreground text-[10px] sm:text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
               {work.nameArabic}
             </h3>
-            <p className="text-muted-foreground text-sm mt-1 ltr transition-colors duration-300 group-hover:text-muted-foreground/80">
+            <p className="text-muted-foreground text-[8px] sm:text-sm mt-1 ltr transition-colors duration-300 group-hover:text-muted-foreground/80">
               {work.nameEnglish}
             </p>
           </div>
-          
+
           {work.rating && (
             <div className="flex items-center justify-between">
               <div className="flex items-center text-amber-300 space-x-1 space-x-reverse">
                 {renderStars(work.rating)}
-                <span className="text text-xs mr-2 text-white transition-colors duration-300">
+                <span className="text text-[8px] sm:text-xs mr-2 text-white transition-colors duration-300">
                   ({work.rating.toFixed(1)})
                 </span>
               </div>

@@ -664,23 +664,28 @@ const Details = () => {
                                             ))}
                                         </div>
 
-                                        <div className="flex gap-2">
+                                        <div className="flex flex-col sm:flex-row gap-3">
                                             <input
                                                 value={newComment}
                                                 onChange={e => setNewComment(e.target.value)}
-                                                placeholder="أضف تعليقك"
-                                                className="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
+                                                placeholder="أضف تعليقك ..."
+                                                className="w-full sm:flex-1 p-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:border-amber-400 focus:outline-none transition-colors"
                                                 disabled={commentLoading}
                                             />
                                             <button
                                                 onClick={submitComment}
                                                 disabled={commentLoading || !newComment.trim()}
-                                                className={`px-4 py-2 rounded transition-all duration-200 ${commentLoading || !newComment.trim()
-                                                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                                                    : 'bg-yellow-500 text-black hover:bg-yellow-600'
+                                                className={`w-full sm:w-auto px-6 py-3 rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 ${commentLoading || !newComment.trim()
+                                                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                                    : 'bg-amber-400 text-black hover:bg-amber-500 hover:shadow-lg hover:shadow-amber-400/20 active:scale-95'
                                                     }`}
                                             >
-                                                {commentLoading ? 'جاري الإرسال...' : 'إرسال'}
+                                                {commentLoading ? (
+                                                    <>
+                                                        <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                                                        <span>جاري الإرسال...</span>
+                                                    </>
+                                                ) : 'إرسال'}
                                             </button>
                                         </div>
 
@@ -833,13 +838,13 @@ const Details = () => {
 
                 {/* Similar Works Section */}
                 {similarMovies.length > 0 && (
-                    <div className="container mx-auto px-4 py-12 border-t border-white/10">
+                    <div className="container mx-auto px-2 md:px-4 py-12 border-t border-white/10">
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-2xl font-bold text-white border-r-4 border-amber-400 pr-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-white border-r-4 border-amber-400 pr-4">
                                 أعمال مشابهة قد تعجبك
                             </h3>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
                             {similarMovies.map((movie) => {
                                 const ratingData = getMovieRating(movie._id);
                                 const movieWithRating = {
