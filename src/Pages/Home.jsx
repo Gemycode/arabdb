@@ -152,7 +152,7 @@ function Home() {
         <div className=" p-7 pt-9 flex justify-between items-center">
           <h2 className="text-3xl font-bold text-white ">المسلسلات
           </h2>
-          <button className="flex items-center gap-3 bg-[#2b3441] px-6 py-3 rounded-full"
+          <button className="flex items-center gap-3 bg-[#2b3441] px-3 py-3 rounded-full"
             onClick={() => {
               navigate('/SeriesFilterDemo');
             }}

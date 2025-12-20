@@ -76,7 +76,7 @@ const LastFilme = () => {
   }
 
   return (
-    <div className="bg-background p-8 w-full" dir="rtl">
+    <div className="bg-background p-2 md:p-8 w-full" dir="rtl">
       <Swiper
         style={{ width: "100%", height: "100%" }}
         modules={[Navigation, Pagination]}
@@ -85,8 +85,8 @@ const LastFilme = () => {
         navigation
         pagination={{ clickable: true }}
         breakpoints={{
-          320: { slidesPerView: 2, spaceBetween: 8 },
-          480: { slidesPerView: 2, spaceBetween: 10 },
+          320: { slidesPerView: 3, spaceBetween: 5 },
+          480: { slidesPerView: 3, spaceBetween: 5 },
           640: { slidesPerView: 3, spaceBetween: 12 },
           768: { slidesPerView: 3, spaceBetween: 15 },
           1024: { slidesPerView: 4, spaceBetween: 18 },
@@ -123,7 +123,7 @@ const LastFilme = () => {
                     />
 
                     <div className="absolute top-2 right-2 bg-amber-300 backdrop-blur-sm rounded-lg px-2 text-black font-extrabold py-1 transition-all duration-300 group-hover:bg-amber-400">
-                      <span className="text-primary-foreground text-xs font-medium">{movie?.genre}</span>
+                      <span className="text-primary-foreground text-[10px] sm:text-xs font-medium">{movie?.genre}</span>
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -137,7 +137,7 @@ const LastFilme = () => {
                             className="lucide lucide-star fill-current text-yellow-400 group-hover:text-primary-foreground transition-colors duration-300"
                             aria-hidden="true"
                           />
-                          <span className="text-white text-xs font-medium group-hover:text-primary-foreground transition-colors duration-300">
+                          <span className="text-white text-[10px] sm:text-xs font-medium group-hover:text-primary-foreground transition-colors duration-300">
                             {movieRating.average.toFixed(1)}
                           </span>
                         </div>
@@ -145,12 +145,12 @@ const LastFilme = () => {
                     )}
                   </div>
 
-                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-grow flex flex-col justify-between">
+                  <div className="p-1.5 sm:p-4 space-y-1 sm:space-y-3 flex-grow flex flex-col justify-between">
                     <div>
-                      <h3 className="font-bold text-foreground text-base sm:text-lg md:text-xl lg:text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                      <h3 className="font-bold text-foreground text-[10px] sm:text-lg md:text-xl lg:text-2xl line-clamp-2 group-hover:text-primary transition-colors duration-300">
                         {movie?.nameArabic}
                       </h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm mt-1 ltr transition-colors duration-300 group-hover:text-muted-foreground/80 line-clamp-1">
+                      <p className="text-muted-foreground text-[8px] sm:text-sm mt-1 ltr transition-colors duration-300 group-hover:text-muted-foreground/80 line-clamp-1">
                         {movie?.nameEnglish}
                       </p>
                     </div>
@@ -161,12 +161,12 @@ const LastFilme = () => {
                         ) : movieRating.average > 0 ? (
                           <>
                             {renderStars(movieRating.average)}
-                            <span className="text-xs sm:text-sm mr-1 sm:mr-2 text-white transition-colors duration-300">
+                            <span className="text-[8px] sm:text-sm mr-1 sm:mr-2 text-white transition-colors duration-300">
                               ({movieRating.displayText})
                             </span>
                           </>
                         ) : (
-                          <span className="text-xs sm:text-sm mr-1 sm:mr-2 text-gray-400 transition-colors duration-300">
+                          <span className="text-[8px] sm:text-sm mr-1 sm:mr-2 text-gray-400 transition-colors duration-300">
                             {movieRating.displayText}
                           </span>
                         )}
