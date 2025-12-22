@@ -2,6 +2,8 @@ import Navbar from '../componet/Navbar';
 import Footer from '../componet/Footer';
 import React, { useEffect, useState, useMemo } from 'react';
 import { Star, Play, User, Heart, Share2, Link as LinkIcon, Trash2 } from 'lucide-react';
+import { SiNetflix, SiYoutube } from 'react-icons/si';
+import { FaPlay } from 'react-icons/fa';
 import { fetchAverageRatings, fetchItemById, fetchMovies } from '../redux/moviesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { axiosInstance } from '../api/axiosInstance';
@@ -424,6 +426,24 @@ const Details = () => {
                                         <span>مشاهدة الآن</span>
                                     </button>
 
+                                    {/* Platform buttons (if provided) */}
+                                    {selectedItem.platforms && Array.isArray(selectedItem.platforms) && selectedItem.platforms.length > 0 && (
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            {selectedItem.platforms.map((p, idx) => {
+                                                const name = (p.name || '').toLowerCase();
+                                                const label = name === 'netflix' ? 'Netflix' : name === 'shahid' ? 'Shahid' : name === 'youtube' ? 'YouTube' : name === 'ocn' ? 'OCN' : (p.name || 'Platform');
+                                                // Try to use provided SVG logo from public assets, fallback to react-icons
+                                                const logoPath = name === 'ocn' || name === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${name}.svg`;
+                                                return (
+                                                    <a key={idx} href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-semibold text-sm transition-all">
+                                                        <img src={logoPath} alt={label} className="w-7 h-7 object-contain" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
+                                                        <span>{label}</span>
+                                                    </a>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
                                     <button
                                         onClick={handleFavoriteClick}
                                         disabled={favoriteLoading}
@@ -584,13 +604,22 @@ const Details = () => {
 
                                 <div className="mt-6">
                                     <h4 className="text-gray-400 text-sm mb-3">طاقم العمل</h4>
-                                    <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap gap-3">
                                         {selectedItem.cast && selectedItem.cast.length > 0 ? (
-                                            selectedItem.cast.map((actor, index) => (
-                                                <span key={index} className="px-3 py-1 bg-white/10 rounded-full text-sm text-white hover:bg-white/20 transition-colors cursor-default">
-                                                    {actor}
-                                                </span>
-                                            ))
+                                            selectedItem.cast.map((actor, index) => {
+                                                const name = actor?.name || actor || 'غير محدد';
+                                                const imageUrl = actor?.image?.url || actor?.image || null;
+                                                return (
+                                                    <div key={index} className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg">
+                                                        {imageUrl ? (
+                                                            <img src={imageUrl} alt={name} className="w-10 h-10 rounded-full object-cover" />
+                                                        ) : (
+                                                            <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-sm text-white font-semibold">{name.charAt(0) || '?'}</div>
+                                                        )}
+                                                        <span className="text-white text-sm">{name}</span>
+                                                    </div>
+                                                );
+                                            })
                                         ) : (
                                             <p className="text-gray-500 text-sm">لم يتم تحديد الممثلين</p>
                                         )}

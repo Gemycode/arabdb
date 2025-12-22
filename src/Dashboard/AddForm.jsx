@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { workService } from '../api/workService';
+import { uploadService } from '../api/uploadService';
+import { SiNetflix, SiYoutube } from 'react-icons/si';
+import { FaPlay } from 'react-icons/fa';
 
 export default function FilmForm() {
   const [isVerified, setIsVerified] = useState(false);
@@ -67,15 +70,19 @@ export default function FilmForm() {
     englishName: '',
     year: '',
     director: '',
+    directorImageUrl: '',
     assistantDirector: '',
     genre: '',
-    actors: [''],
+    // cast is array of objects { name, imageUrl }
+    actors: [{ name: '', imageUrl: '' }],
     country: '',
     location: '',
     summary: '',
     posterUrl: '',
     seasons: '',
-    episodes: ''
+    episodes: '',
+    // platforms: array of { name, url }
+    platforms: [],
   });
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
@@ -92,15 +99,17 @@ export default function FilmForm() {
               englishName: work.nameEnglish || '',
               year: work.year || '',
               director: work.director || '',
+              directorImageUrl: work.directorImage?.url || '',
               assistantDirector: work.assistantDirector || '',
               genre: work.genre || '',
-              actors: work.cast && work.cast.length > 0 ? work.cast : [''],
+              actors: work.cast && work.cast.length > 0 ? work.cast.map(a => ({ name: a.name || a, imageUrl: a.image?.url || a.image || '' })) : [{ name: '', imageUrl: '' }],
               country: work.country || '',
               location: work.filmingLocation || '',
               summary: work.summary || '',
               posterUrl: work.posterUrl || '',
               seasons: work.seasonsCount || '',
-              episodes: work.episodesCount || ''
+              episodes: work.episodesCount || '',
+              platforms: work.platforms || []
             });
             // set preview if posterUrl exists
             setImagePreview(work.posterUrl || '');
@@ -122,10 +131,37 @@ export default function FilmForm() {
     const { name, value } = e.target;
     if (name === 'actors' && index !== null) {
       const updatedActors = [...formData.actors];
-      updatedActors[index] = value;
+      updatedActors[index] = { ...updatedActors[index], name: value };
       setFormData({ ...formData, actors: updatedActors });
     } else {
       setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleActorImageChange = async (file, index) => {
+    if (!file) return;
+    try {
+      const res = await uploadService.uploadImage(file);
+      // res.data contains public_id and secure_url depending on backend
+      const url = res.secure_url || res.url || res.secureUrl || res.data?.secure_url || res.secureUrl;
+      const updatedActors = [...formData.actors];
+      updatedActors[index] = { ...updatedActors[index], imageUrl: url };
+      setFormData({ ...formData, actors: updatedActors });
+    } catch (err) {
+      console.error('Failed to upload actor image', err);
+      alert('فشل رفع صورة الممثل');
+    }
+  };
+
+  const handleDirectorImageChange = async (file) => {
+    if (!file) return;
+    try {
+      const res = await uploadService.uploadImage(file);
+      const url = res.secure_url || res.url || res.secureUrl || res.data?.secure_url || res.secureUrl;
+      setFormData({ ...formData, directorImageUrl: url });
+    } catch (err) {
+      console.error('Failed to upload director image', err);
+      alert('فشل رفع صورة المخرج');
     }
   };
 
@@ -155,7 +191,7 @@ export default function FilmForm() {
   };
 
   const addActor = () => {
-    setFormData({ ...formData, actors: [...formData.actors, ''] });
+    setFormData({ ...formData, actors: [...formData.actors, { name: '', imageUrl: '' }] });
   };
 
   const removeActor = (index) => {
@@ -163,6 +199,21 @@ export default function FilmForm() {
       const updatedActors = formData.actors.filter((_, i) => i !== index);
       setFormData({ ...formData, actors: updatedActors });
     }
+  };
+
+  const addPlatform = () => {
+    setFormData({ ...formData, platforms: [...formData.platforms, { name: 'netflix', url: '' }] });
+  };
+
+  const removePlatform = (index) => {
+    const updated = formData.platforms.filter((_, i) => i !== index);
+    setFormData({ ...formData, platforms: updated });
+  };
+
+  const handlePlatformChange = (index, key, value) => {
+    const updated = [...formData.platforms];
+    updated[index] = { ...updated[index], [key]: value };
+    setFormData({ ...formData, platforms: updated });
   };
 
   const handleSubmit = async (e) => {
@@ -175,14 +226,25 @@ export default function FilmForm() {
       nameEnglish: formData.englishName.trim(),
       year: parseInt(formData.year) || 2000,
       director: formData.director.trim(),
+      directorImage: formData.directorImageUrl ? { url: formData.directorImageUrl } : undefined,
       assistantDirector: formData.assistantDirector.trim(),
       genre: formData.genre.trim(),
-      cast: formData.actors.filter(actor => actor.trim() !== ''),
+      // cast as array of objects { name, image: { url } }
+      cast: formData.actors
+        .filter(actor => actor && actor.name && actor.name.trim() !== '')
+        .map(a => ({ name: a.name.trim(), image: a.imageUrl ? { url: a.imageUrl } : undefined })),
       country: formData.country.trim(),
       filmingLocation: formData.location.trim(),
       summary: formData.summary.trim(),
       posterUrl: formData.posterUrl.trim()
     };
+
+    // attach platforms if any
+    if (formData.platforms && Array.isArray(formData.platforms) && formData.platforms.length > 0) {
+      cleanedData.platforms = formData.platforms
+        .map(p => (p && p.name && p.url) ? { name: p.name, url: p.url } : null)
+        .filter(Boolean);
+    }
 
     // إضافة حقول المسلسل إذا كان نوع العمل مسلسل
     if (formData.type === 'مسلسل') {
@@ -206,6 +268,8 @@ export default function FilmForm() {
         fd.append('country', cleanedData.country);
         fd.append('filmingLocation', cleanedData.filmingLocation);
         fd.append('summary', cleanedData.summary);
+          if (cleanedData.directorImage) fd.append('directorImage', JSON.stringify(cleanedData.directorImage));
+          if (cleanedData.platforms) fd.append('platforms', JSON.stringify(cleanedData.platforms));
         // seasons/episodes if series
         if (cleanedData.seasonsCount) fd.append('seasonsCount', cleanedData.seasonsCount);
         if (cleanedData.episodesCount) fd.append('episodesCount', cleanedData.episodesCount);
@@ -220,9 +284,9 @@ export default function FilmForm() {
           await workService.createWorkWithImage(fd);
           alert('تم إضافة العمل بنجاح');
           // reset form
-          setFormData({
-            type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', assistantDirector: '', genre: '', actors: [''], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: ''
-          });
+            setFormData({
+              type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', directorImageUrl: '', assistantDirector: '', genre: '', actors: [{ name: '', imageUrl: '' }], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: '', platforms: []
+            });
           setSelectedImageFile(null);
           setImagePreview('');
         }
@@ -241,9 +305,10 @@ export default function FilmForm() {
             englishName: '',
             year: '',
             director: '',
+            directorImageUrl: '',
             assistantDirector: '',
             genre: '',
-            actors: [''],
+            actors: [{ name: '', imageUrl: '' }],
             country: '',
             location: '',
             summary: '',
@@ -255,51 +320,27 @@ export default function FilmForm() {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      const errorMessage = error.response?.data?.message ||
-        error.response?.data?.errors?.[0]?.msg ||
-        error.message ||
-        'حدث خطأ أثناء حفظ العمل';
-      alert(errorMessage);
+      setFormData({
+        type: 'فيلم',
+        arabicName: '',
+        englishName: '',
+        year: '',
+        director: '',
+        directorImageUrl: '',
+        assistantDirector: '',
+        genre: '',
+        actors: [{ name: '', imageUrl: '' }],
+        country: '',
+        location: '',
+        summary: '',
+        posterUrl: '',
+        seasons: '',
+        episodes: '',
+        platforms: []
+      });
+      const errMsg = error?.response?.data?.message || error.message || 'حدث خطأ أثناء حفظ العمل';
+      alert(errMsg);
     }
-  };
-
-  if (loading) return <p className="text-white">جاري التحميل...</p>;
-
-  if (!isVerified) {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        {/* Navbar and Footer hidden on login screen */}
-        <div className="min-h-screen flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full space-y-8">
-            <form onSubmit={handleSubmitt} className="space-y-6 bg-gray-900/50 p-6 rounded-lg">
-
-              <input
-                type="email"
-                placeholder="الإيميل"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 placeholder-gray-400"
-              />
-
-              <input
-                type="password"
-                placeholder="كلمة المرور"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 placeholder-gray-400"
-              />
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-amber-400 text-black font-bold rounded-lg hover:bg-amber-500"
-              >
-                دخول
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   // Dashboard: hide Navbar and Footer
@@ -393,6 +434,15 @@ export default function FilmForm() {
             required
             className="w-full p-2 rounded bg-gray-700"
           />
+          <div className="mt-2">
+            <label className="block mb-1">صورة المخرج (اختياري)</label>
+            <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleDirectorImageChange(f); }} />
+            {formData.directorImageUrl && (
+              <div className="mt-2">
+                <img src={formData.directorImageUrl} alt="director" className="max-h-28 rounded" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div>
@@ -422,25 +472,43 @@ export default function FilmForm() {
         <div>
           <label className="block mb-1">الأبطال *</label>
           {formData.actors.map((actor, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                name="actors"
-                value={actor}
-                onChange={(e) => handleChange(e, index)}
-                required
-                className="flex-1 p-2 rounded bg-gray-700"
-                placeholder={`الممثل ${index + 1}`}
-              />
-              {formData.actors.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeActor(index)}
-                  className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
-                >
-                  حذف
-                </button>
-              )}
+            <div key={index} className="flex flex-col gap-2 mb-2 bg-gray-900/30 p-3 rounded">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  name="actors"
+                  value={actor.name}
+                  onChange={(e) => handleChange(e, index)}
+                  required
+                  className="flex-1 p-2 rounded bg-gray-700"
+                  placeholder={`الممثل ${index + 1}`}
+                />
+                {formData.actors.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeActor(index)}
+                    className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                  >
+                    حذف
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400 text-black font-semibold rounded-lg cursor-pointer hover:bg-amber-500 transition">
+                  <span className="text-sm">صورة الممثل</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleActorImageChange(f, index); }}
+                    className="hidden"
+                  />
+                </label>
+                {actor.imageUrl ? (
+                  <img src={actor.imageUrl} alt={`actor-${index}`} className="max-h-20 rounded" />
+                ) : (
+                  <span className="text-xs text-gray-400">لم يتم رفع صورة بعد</span>
+                )}
+              </div>
             </div>
           ))}
           <button
@@ -565,6 +633,36 @@ export default function FilmForm() {
             </div>
           </>
         )}
+
+        <div>
+          <label className="block mb-1">المنصات (اختر المنصة وأضف رابط العمل)</label>
+          {formData.platforms && formData.platforms.length > 0 ? (
+            formData.platforms.map((p, idx) => {
+              const name = (p.name || '').toLowerCase();
+              let Icon = null;
+              if (name === 'netflix') Icon = SiNetflix;
+              else if (name === 'youtube') Icon = SiYoutube;
+              else Icon = FaPlay;
+
+              return (
+                <div key={idx} className="flex gap-2 mb-2 items-center">
+                      <img src={(p.name || '').toLowerCase() === 'ocn' || (p.name || '').toLowerCase() === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${(p.name||'').toLowerCase()}.svg`} alt={p.name} className="w-10 h-10 object-contain" onError={(e)=>{e.currentTarget.onerror=null; e.currentTarget.style.display='none'}} />
+                      <select value={p.name} onChange={(e) => handlePlatformChange(idx, 'name', e.target.value)} className="p-2 rounded bg-gray-700">
+                    <option value="netflix">Netflix</option>
+                    <option value="shahid">Shahid</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="ocn">OCN</option>
+                  </select>
+                  <input type="url" value={p.url} onChange={(e) => handlePlatformChange(idx, 'url', e.target.value)} placeholder="رابط العمل على المنصة" className="flex-1 p-2 rounded bg-gray-700" />
+                  <button type="button" onClick={() => removePlatform(idx)} className="px-3 py-2 bg-red-600 rounded">حذف</button>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-xs text-gray-400 mb-2">لم تقم بإضافة أي منصة بعد.</p>
+          )}
+          <button type="button" onClick={addPlatform} className="text-sm text-amber-300 hover:underline mb-4">+ أضف منصة</button>
+        </div>
 
         <button
           type="submit"

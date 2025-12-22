@@ -20,11 +20,18 @@ export const workService = {
         director: workData.director || '',
         assistantDirector: workData.assistantDirector || '',
         genre: workData.genre || '',
-        cast: Array.isArray(workData.cast) ? workData.cast.filter(actor => actor && actor.trim() !== '') : [],
+        // cast can be array of strings or objects {name, image}
+        cast: Array.isArray(workData.cast) ? workData.cast.map(actor => {
+          if (!actor) return null;
+          if (typeof actor === 'string') return { name: actor };
+          if (typeof actor === 'object' && actor.name) return { name: actor.name, image: actor.image };
+          return null;
+        }).filter(Boolean) : [],
         country: workData.country || '',
         filmingLocation: workData.filmingLocation || '',
         summary: workData.summary || '',
         posterUrl: workData.posterUrl || undefined,
+        platforms: workData.platforms || undefined,
       };
 
       // Add series-specific fields if type is series
@@ -50,14 +57,15 @@ export const workService = {
       requestData.posterUrl = requestData.posterUrl || 'https://fastly.picsum.photos/id/237/500/500.jpg?hmac=idOEkrJhLd7nEU5pNrAGCyJ6HHJdR_sit1qDt5J3Wo0';
     }
 
-    // Fix cast array
+    // Fix cast array: ensure array of objects with name
     if (!requestData.cast || !Array.isArray(requestData.cast) || requestData.cast.length === 0) {
-      requestData.cast = ['لم يتم تحديد الممثلين'];
+      requestData.cast = [{ name: 'لم يتم تحديد الممثلين' }];
     } else {
-      // Convert any non-string values to strings
-      requestData.cast = requestData.cast.map(actor =>
-        actor && typeof actor === 'string' ? actor : 'لم يتم تحديد الاسم'
-      );
+      requestData.cast = requestData.cast.map(actor => {
+        if (typeof actor === 'string') return { name: actor };
+        if (actor && typeof actor === 'object' && actor.name) return actor;
+        return { name: 'لم يتم تحديد الاسم' };
+      });
     }
 
     // For series, ensure seasonsCount and episodesCount are present
@@ -112,11 +120,18 @@ export const workService = {
       director: workData.director || '',
       assistantDirector: workData.assistantDirector || '',
       genre: workData.genre || '',
-      cast: Array.isArray(workData.cast) ? workData.cast.filter(actor => actor && actor.trim() !== '') : [],
+      // support array of objects or strings
+      cast: Array.isArray(workData.cast) ? workData.cast.map(actor => {
+        if (!actor) return null;
+        if (typeof actor === 'string') return { name: actor };
+        if (typeof actor === 'object' && actor.name) return { name: actor.name, image: actor.image };
+        return null;
+      }).filter(Boolean) : [],
       country: workData.country || '',
       filmingLocation: workData.location || workData.filmingLocation || '',
       summary: workData.summary || '',
       posterUrl: workData.posterUrl || '',
+      platforms: workData.platforms || undefined,
     };
 
     // Add series-specific fields if type is series
@@ -139,16 +154,14 @@ export const workService = {
 
     // Fix cast array
     if (!requestData.cast || !Array.isArray(requestData.cast) || requestData.cast.length === 0) {
-      requestData.cast = ['لم يتم تحديد الممثلين'];
+      requestData.cast = [{ name: 'لم يتم تحديد الممثلين' }];
     } else {
-      // Convert any non-string values to strings and filter empty ones
-      requestData.cast = requestData.cast
-        .map(actor => actor && typeof actor === 'string' ? actor.trim() : '')
-        .filter(actor => actor !== '');
-
-      if (requestData.cast.length === 0) {
-        requestData.cast = ['لم يتم تحديد الممثلين'];
-      }
+      requestData.cast = requestData.cast.map(actor => {
+        if (typeof actor === 'string') return { name: actor.trim() };
+        if (actor && typeof actor === 'object' && actor.name) return actor;
+        return null;
+      }).filter(Boolean);
+      if (requestData.cast.length === 0) requestData.cast = [{ name: 'لم يتم تحديد الممثلين' }];
     }
 
     // For series, ensure seasonsCount and episodesCount are present
