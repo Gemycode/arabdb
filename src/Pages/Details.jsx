@@ -421,10 +421,10 @@ const Details = () => {
 
                                 {/* Action Buttons */}
                                 <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-                                    <button className="flex items-center gap-3 px-8 py-4 bg-amber-400 hover:bg-amber-500 text-black rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                                    {/* <button className="flex items-center gap-3 px-8 py-4 bg-amber-400 hover:bg-amber-500 text-black rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
                                         <Play size={24} className="fill-current" />
                                         <span>مشاهدة الآن</span>
-                                    </button>
+                                    </button> */}
 
                                     {/* Platform buttons (if provided) */}
                                     {selectedItem.platforms && Array.isArray(selectedItem.platforms) && selectedItem.platforms.length > 0 && (
@@ -437,7 +437,7 @@ const Details = () => {
                                                 return (
                                                     <a key={idx} href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-semibold text-sm transition-all">
                                                         <img src={logoPath} alt={label} className="w-7 h-7 object-contain" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
-                                                        <span>{label}</span>
+                                                        <span>للمشاهدة {label}</span>
                                                     </a>
                                                 );
                                             })}
@@ -604,10 +604,10 @@ const Details = () => {
 
                                 <div className="mt-6">
                                     <h4 className="text-gray-400 text-sm mb-3">طاقم العمل</h4>
-                                        <div className="flex flex-wrap gap-3">
+                                    <div className="flex flex-wrap gap-3">
                                         {selectedItem.cast && selectedItem.cast.length > 0 ? (
                                             selectedItem.cast.map((actor, index) => {
-                                                const name = actor?.name || actor || 'غير محدد';
+                                                const name = (typeof actor === 'string' ? actor : actor?.name) || 'غير محدد';
                                                 const imageUrl = actor?.image?.url || actor?.image || null;
                                                 return (
                                                     <div key={index} className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg">
