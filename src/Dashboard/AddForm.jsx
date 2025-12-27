@@ -454,12 +454,24 @@ export default function FilmForm() {
           />
           <div className="mt-2">
             <label className="block mb-1">صورة المخرج (اختياري)</label>
-            <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleDirectorImageChange(f); }} />
-            {formData.directorImageUrl && (
-              <div className="mt-2">
-                <img src={formData.directorImageUrl} alt="director" className="max-h-28 rounded" />
-              </div>
-            )}
+            <div className="flex items-center gap-4">
+              <label className="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 text-black font-semibold rounded-lg cursor-pointer hover:bg-amber-500 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M4 5a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-3.172a2 2 0 01-1.414-.586l-.828-.828A2 2 0 007.172 3H4z" />
+                  <path d="M8 11a3 3 0 106 0 3 3 0 00-6 0z" />
+                </svg>
+                <span className="text-sm">اختر صورة المخرج</span>
+                <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleDirectorImageChange(f); }} className="hidden" />
+              </label>
+              {formData.directorImageUrl ? (
+                <div className="flex items-center gap-2">
+                  <img src={formData.directorImageUrl} alt="director" className="max-h-28 rounded" />
+                  <button type="button" onClick={() => setFormData({ ...formData, directorImageUrl: '' })} className="px-3 py-1 bg-red-600 text-white rounded">إزالة</button>
+                </div>
+              ) : (
+                <span className="text-xs text-gray-400">لم تقم برفع صورة بعد</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -475,12 +487,24 @@ export default function FilmForm() {
           />
           <div className="mt-2">
             <label className="block mb-1">صورة مساعد المخرج (اختياري)</label>
-            <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleAssistantDirectorImageChange(f); }} />
-            {formData.assistantDirectorImageUrl && (
-              <div className="mt-2">
-                <img src={formData.assistantDirectorImageUrl} alt="assistant-director" className="max-h-28 rounded" />
-              </div>
-            )}
+            <div className="flex items-center gap-4">
+              <label className="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 text-black font-semibold rounded-lg cursor-pointer hover:bg-amber-500 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M4 5a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-3.172a2 2 0 01-1.414-.586l-.828-.828A2 2 0 007.172 3H4z" />
+                  <path d="M8 11a3 3 0 106 0 3 3 0 00-6 0z" />
+                </svg>
+                <span className="text-sm">اختر صورة مساعد المخرج</span>
+                <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleAssistantDirectorImageChange(f); }} className="hidden" />
+              </label>
+              {formData.assistantDirectorImageUrl ? (
+                <div className="flex items-center gap-2">
+                  <img src={formData.assistantDirectorImageUrl} alt="assistant-director" className="max-h-28 rounded" />
+                  <button type="button" onClick={() => setFormData({ ...formData, assistantDirectorImageUrl: '' })} className="px-3 py-1 bg-red-600 text-white rounded">إزالة</button>
+                </div>
+              ) : (
+                <span className="text-xs text-gray-400">لم تقم برفع صورة بعد</span>
+              )}
+            </div>
           </div>
         </div>
 
