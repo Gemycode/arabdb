@@ -72,6 +72,7 @@ export default function FilmForm() {
     director: '',
     directorImageUrl: '',
     assistantDirector: '',
+    assistantDirectorImageUrl: '',
     genre: '',
     // cast is array of objects { name, imageUrl }
     actors: [{ name: '', imageUrl: '' }],
@@ -101,6 +102,7 @@ export default function FilmForm() {
               director: work.director || '',
               directorImageUrl: work.directorImage?.url || '',
               assistantDirector: work.assistantDirector || '',
+              assistantDirectorImageUrl: work.assistantDirectorImage?.url || '',
               genre: work.genre || '',
               actors: work.cast && work.cast.length > 0 ? work.cast.map(a => ({ name: a.name || a, imageUrl: a.image?.url || a.image || '' })) : [{ name: '', imageUrl: '' }],
               country: work.country || '',
@@ -162,6 +164,18 @@ export default function FilmForm() {
     } catch (err) {
       console.error('Failed to upload director image', err);
       alert('فشل رفع صورة المخرج');
+    }
+  };
+
+  const handleAssistantDirectorImageChange = async (file) => {
+    if (!file) return;
+    try {
+      const res = await uploadService.uploadImage(file);
+      const url = res.secure_url || res.url || res.secureUrl || res.data?.secure_url || res.secureUrl;
+      setFormData({ ...formData, assistantDirectorImageUrl: url });
+    } catch (err) {
+      console.error('Failed to upload assistant director image', err);
+      alert('فشل رفع صورة مساعد المخرج');
     }
   };
 
@@ -228,6 +242,7 @@ export default function FilmForm() {
       director: formData.director.trim(),
       directorImage: formData.directorImageUrl ? { url: formData.directorImageUrl } : undefined,
       assistantDirector: formData.assistantDirector.trim(),
+      assistantDirectorImage: formData.assistantDirectorImageUrl ? { url: formData.assistantDirectorImageUrl } : undefined,
       genre: formData.genre.trim(),
       // cast as array of objects { name, image: { url } }
       cast: formData.actors
@@ -269,6 +284,7 @@ export default function FilmForm() {
         fd.append('filmingLocation', cleanedData.filmingLocation);
         fd.append('summary', cleanedData.summary);
           if (cleanedData.directorImage) fd.append('directorImage', JSON.stringify(cleanedData.directorImage));
+          if (cleanedData.assistantDirectorImage) fd.append('assistantDirectorImage', JSON.stringify(cleanedData.assistantDirectorImage));
           if (cleanedData.platforms) fd.append('platforms', JSON.stringify(cleanedData.platforms));
         // seasons/episodes if series
         if (cleanedData.seasonsCount) fd.append('seasonsCount', cleanedData.seasonsCount);
@@ -285,7 +301,7 @@ export default function FilmForm() {
           alert('تم إضافة العمل بنجاح');
           // reset form
             setFormData({
-              type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', directorImageUrl: '', assistantDirector: '', genre: '', actors: [{ name: '', imageUrl: '' }], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: '', platforms: []
+              type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', directorImageUrl: '', assistantDirector: '', assistantDirectorImageUrl: '', genre: '', actors: [{ name: '', imageUrl: '' }], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: '', platforms: []
             });
           setSelectedImageFile(null);
           setImagePreview('');
@@ -307,6 +323,7 @@ export default function FilmForm() {
             director: '',
             directorImageUrl: '',
             assistantDirector: '',
+            assistantDirectorImageUrl: '',
             genre: '',
             actors: [{ name: '', imageUrl: '' }],
             country: '',
@@ -328,6 +345,7 @@ export default function FilmForm() {
         director: '',
         directorImageUrl: '',
         assistantDirector: '',
+        assistantDirectorImageUrl: '',
         genre: '',
         actors: [{ name: '', imageUrl: '' }],
         country: '',
@@ -455,6 +473,15 @@ export default function FilmForm() {
             required
             className="w-full p-2 rounded bg-gray-700"
           />
+          <div className="mt-2">
+            <label className="block mb-1">صورة مساعد المخرج (اختياري)</label>
+            <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; handleAssistantDirectorImageChange(f); }} />
+            {formData.assistantDirectorImageUrl && (
+              <div className="mt-2">
+                <img src={formData.assistantDirectorImageUrl} alt="assistant-director" className="max-h-28 rounded" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

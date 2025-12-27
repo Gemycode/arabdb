@@ -582,14 +582,14 @@ const Details = () => {
                             <div className="bg-[#1e1e1e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
                                 <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4">تفاصيل إضافية</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-white/5 p-4 rounded-xl">
+                                    {/* <div className="bg-white/5 p-4 rounded-xl">
                                         <h4 className="text-gray-400 text-sm mb-1">المخرج</h4>
                                         <p className="text-white font-medium text-lg">{selectedItem.director || 'غير محدد'}</p>
-                                    </div>
-                                    <div className="bg-white/5 p-4 rounded-xl">
+                                    </div> */}
+                                    {/* <div className="bg-white/5 p-4 rounded-xl">
                                         <h4 className="text-gray-400 text-sm mb-1">مساعد المخرج</h4>
                                         <p className="text-white font-medium text-lg">{selectedItem.assistantDirector || 'غير محدد'}</p>
-                                    </div>
+                                    </div> */}
                                     <div className="bg-white/5 p-4 rounded-xl">
                                         <h4 className="text-gray-400 text-sm mb-1">مكان التصوير</h4>
                                         <p className="text-white font-medium text-lg">{selectedItem.filmingLocation || 'غير محدد'}</p>
@@ -604,25 +604,33 @@ const Details = () => {
 
                                 <div className="mt-6">
                                     <h4 className="text-gray-400 text-sm mb-3">طاقم العمل</h4>
-                                    <div className="flex flex-wrap gap-3">
-                                        {selectedItem.cast && selectedItem.cast.length > 0 ? (
-                                            selectedItem.cast.map((actor, index) => {
-                                                const name = (typeof actor === 'string' ? actor : actor?.name) || 'غير محدد';
-                                                const imageUrl = actor?.image?.url || actor?.image || null;
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                        {(() => {
+                                            const crew = [
+                                                ...(selectedItem.director || selectedItem.directorImage?.url ? [{ name: selectedItem.director || 'المخرج', image: selectedItem.directorImage?.url, role: 'المخرج' }] : []),
+                                                ...(selectedItem.assistantDirector || selectedItem.assistantDirectorImage?.url ? [{ name: selectedItem.assistantDirector || 'مساعد المخرج', image: selectedItem.assistantDirectorImage?.url, role: 'مساعد المخرج' }] : []),
+                                                ...(Array.isArray(selectedItem.cast) ? selectedItem.cast.map(c => (typeof c === 'string' ? { name: c, image: null, role: 'ممثل' } : { name: c.name, image: c.image?.url || c.image || null, role: 'ممثل' })) : [])
+                                            ];
+
+                                            if (crew.length === 0) return <p className="text-gray-500 text-sm">لم يتم تحديد طاقم العمل</p>;
+
+                                            return crew.map((person, idx) => {
+                                                const name = person?.name || 'غير محدد';
+                                                const imageUrl = person?.image || null;
+                                                const role = person?.role || 'عضو الطاقم';
                                                 return (
-                                                    <div key={index} className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg">
+                                                    <div key={idx} className="bg-white/5 rounded-lg overflow-hidden text-center p-3">
                                                         {imageUrl ? (
-                                                            <img src={imageUrl} alt={name} className="w-10 h-10 rounded-full object-cover" />
+                                                            <img src={imageUrl} alt={name} className="w-full h-36 object-cover rounded-md mb-2" />
                                                         ) : (
-                                                            <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-sm text-white font-semibold">{name.charAt(0) || '?'}</div>
+                                                            <div className="w-full h-36 bg-gray-700 rounded-md mb-2 flex items-center justify-center text-2xl font-bold text-white">{(name && name.charAt(0)) || '?'}</div>
                                                         )}
-                                                        <span className="text-white text-sm">{name}</span>
+                                                        <div className="text-white text-sm font-medium">{name}</div>
+                                                        <div className="text-gray-400 text-xs mt-1">{role}</div>
                                                     </div>
                                                 );
-                                            })
-                                        ) : (
-                                            <p className="text-gray-500 text-sm">لم يتم تحديد الممثلين</p>
-                                        )}
+                                            });
+                                        })()}
                                     </div>
                                 </div>
                             </div>
