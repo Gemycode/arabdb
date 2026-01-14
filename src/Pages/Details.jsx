@@ -429,7 +429,7 @@ const Details = () => {
                                     {/* Platform buttons (if provided) */}
                                     {selectedItem.platforms && Array.isArray(selectedItem.platforms) && selectedItem.platforms.length > 0 && (
                                         <div className="flex flex-wrap items-center gap-2">
-                                            {selectedItem.platforms.map((p, idx) => {
+                                            {selectedItem.platforms.filter(p => p.url !== 'https://arabfilmdb.com/featured_slider_flag').map((p, idx) => {
                                                 const name = (p.name || '').toLowerCase();
                                                 const label = name === 'netflix' ? 'Netflix' : name === 'shahid' ? 'Shahid' : name === 'youtube' ? 'YouTube' : name === 'ocn' ? 'OCN' : (p.name || 'Platform');
                                                 // Try to use provided SVG logo from public assets, fallback to react-icons

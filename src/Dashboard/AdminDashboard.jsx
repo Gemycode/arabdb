@@ -603,6 +603,58 @@ const AdminDashboard = () => {
   const [showAdForm, setShowAdForm] = useState(false);
   const [editingAd, setEditingAd] = useState(null);
 
+  const toggleSlider = (id, currentPlatforms) => {
+    const SLIDER_URL_FLAG = 'https://arabfilmdb.com/featured_slider_flag';
+    // Check if slider exists in platforms by checking the specific URL
+    // We also need to clean up any old 'Slider' platforms if they exist (though they shouldn't be savable)
+    const platforms = currentPlatforms ? currentPlatforms.filter(p => p.name !== 'Slider') : [];
+
+    const isInSlider = platforms.some(p => p.url === SLIDER_URL_FLAG);
+
+    let newPlatforms;
+    if (isInSlider) {
+      newPlatforms = platforms.filter(p => p.url !== SLIDER_URL_FLAG);
+    } else {
+      // Use 'netflix' as it is a valid enum value, but mark it with our internal flag URL
+      newPlatforms = [...platforms, { name: 'netflix', url: SLIDER_URL_FLAG }];
+    }
+
+    // Find the work object to update
+    const work = works.find(w => w._id === id);
+    if (!work) return;
+
+    // Check if posterUrl is the hardcoded default and clear it if so (auto-fix)
+    const DEFAULT_PLACEHOLDER = 'https://fastly.picsum.photos/id/237/500/500.jpg?hmac=idOEkrJhLd7nEU5pNrAGCyJ6HHJdR_sit1qDt5J3Wo0';
+    const cleanPosterUrl = (work.posterUrl === DEFAULT_PLACEHOLDER) ? '' : work.posterUrl;
+
+    // Prepare data for workService.updateWork
+    const updateData = {
+      ...work,
+      posterUrl: cleanPosterUrl,
+      type: work.type,
+      platforms: newPlatforms,
+      seasons: work.seasonsCount,
+      episodes: work.episodesCount
+    };
+
+    // Optimistic update
+    setWorks(prev => prev.map(w => w._id === id ? { ...w, platforms: newPlatforms } : w));
+
+    workService.updateWork(id, updateData)
+      .then(() => {
+        toast.success(isInSlider ? 'تمت الإزالة من السلايدر' : 'تمت الإضافة للسلايدر');
+      })
+      .catch((err) => {
+        console.error("Slider toggle error:", err);
+        if (err.response) {
+          console.error("Response Data:", err.response.data);
+        }
+        toast.error('حدث خطأ أثناء تحديث حالة السلايدر');
+        // Revert on error
+        setWorks(prev => prev.map(w => w._id === id ? { ...w, platforms: currentPlatforms } : w));
+      });
+  };
+
   const fetchWorks = () => {
     setLoading(true);
     axiosInstance.get('/works')
@@ -905,6 +957,7 @@ const AdminDashboard = () => {
                         <th className="px-4 py-3">العنوان (ع)</th>
                         <th className="px-4 py-3">العنوان (En)</th>
                         <th className="px-4 py-3">السنة</th>
+                        <th className="px-4 py-3">السلايدر</th>
                         <th className="px-4 py-3">تحكم</th>
                       </tr>
                     </thead>
@@ -920,6 +973,17 @@ const AdminDashboard = () => {
                           <td className="px-4 py-3 text-white">{w.nameArabic}</td>
                           <td className="px-4 py-3 text-gray-300">{w.nameEnglish}</td>
                           <td className="px-4 py-3 text-gray-300">{w.year}</td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => toggleSlider(w._id, w.platforms)}
+                              className={`p-2 rounded-full transition-colors ${w.platforms?.some(p => p.url === 'https://arabfilmdb.com/featured_slider_flag') ? 'bg-amber-500 text-black' : 'bg-gray-700 text-gray-400 hover:text-white'}`}
+                              title={w.platforms?.some(p => p.url === 'https://arabfilmdb.com/featured_slider_flag') ? 'إزالة من السلايدر' : 'إضافة للسلايدر'}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            </button>
+                          </td>
                           <td className="px-4 py-3">
                             <div className="flex gap-2">
                               <button
@@ -982,6 +1046,7 @@ const AdminDashboard = () => {
                         <th className="px-4 py-3">العنوان (ع)</th>
                         <th className="px-4 py-3">العنوان (En)</th>
                         <th className="px-4 py-3">السنة</th>
+                        <th className="px-4 py-3">السلايدر</th>
                         <th className="px-4 py-3">تحكم</th>
                       </tr>
                     </thead>
@@ -997,6 +1062,17 @@ const AdminDashboard = () => {
                           <td className="px-4 py-3 text-white">{w.nameArabic}</td>
                           <td className="px-4 py-3 text-gray-300">{w.nameEnglish}</td>
                           <td className="px-4 py-3 text-gray-300">{w.year}</td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => toggleSlider(w._id, w.platforms)}
+                              className={`p-2 rounded-full transition-colors ${w.platforms?.some(p => p.url === 'https://arabfilmdb.com/featured_slider_flag') ? 'bg-amber-500 text-black' : 'bg-gray-700 text-gray-400 hover:text-white'}`}
+                              title={w.platforms?.some(p => p.url === 'https://arabfilmdb.com/featured_slider_flag') ? 'إزالة من السلايدر' : 'إضافة للسلايدر'}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            </button>
+                          </td>
                           <td className="px-4 py-3">
                             <div className="flex gap-2">
                               <button

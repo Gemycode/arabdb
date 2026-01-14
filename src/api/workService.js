@@ -14,7 +14,8 @@ export const workService = {
     } else {
       // Convert form data to match backend schema
       requestData = {
-        type: workData.type == 'film' ? 'film' : 'series', nameArabic: workData.nameArabic || '',
+        type: (workData.type === 'film' || workData.type === 'فيلم') ? 'film' : 'series',
+        nameArabic: workData.nameArabic || '',
         nameEnglish: workData.nameEnglish || '',
         year: parseInt(workData.year) || 0,
         director: workData.director || '',
@@ -35,7 +36,7 @@ export const workService = {
       };
 
       // Add series-specific fields if type is series
-      if (workData.type === 'مسلسل') {
+      if (requestData.type === 'series') {
         requestData.seasonsCount = parseInt(workData.seasons);
         requestData.episodesCount = parseInt(workData.episodes);
       }
@@ -113,7 +114,7 @@ export const workService = {
 
     // Convert form data to match backend schema
     let requestData = {
-      type: workData.type === 'فيلم' ? 'film' : 'series',
+      type: (workData.type === 'film' || workData.type === 'فيلم') ? 'film' : 'series',
       nameArabic: workData.arabicName || workData.nameArabic || '',
       nameEnglish: workData.englishName || workData.nameEnglish || '',
       year: parseInt(workData.year) || 2000,
@@ -130,12 +131,12 @@ export const workService = {
       country: workData.country || '',
       filmingLocation: workData.location || workData.filmingLocation || '',
       summary: workData.summary || '',
-      posterUrl: workData.posterUrl || '',
+      posterUrl: workData.posterUrl || undefined,
       platforms: workData.platforms || undefined,
     };
 
     // Add series-specific fields if type is series
-    if (workData.type === 'مسلسل') {
+    if (requestData.type === 'series') {
       requestData.seasonsCount = parseInt(workData.seasons) || parseInt(workData.seasonsCount) || 1;
       requestData.episodesCount = parseInt(workData.episodes) || parseInt(workData.episodesCount) || 1;
     }
@@ -150,7 +151,8 @@ export const workService = {
     requestData.country = requestData.country || 'مصر';
     requestData.filmingLocation = requestData.filmingLocation || 'القاهرة';
     requestData.summary = requestData.summary || 'لا يوجد ملخص متاح';
-    requestData.posterUrl = requestData.posterUrl || 'https://fastly.picsum.photos/id/237/500/500.jpg?hmac=idOEkrJhLd7nEU5pNrAGCyJ6HHJdR_sit1qDt5J3Wo0';
+    // Remove forced default posterUrl to allow fallback to posterImage
+    // requestData.posterUrl = requestData.posterUrl || ...;
 
     // Fix cast array
     if (!requestData.cast || !Array.isArray(requestData.cast) || requestData.cast.length === 0) {

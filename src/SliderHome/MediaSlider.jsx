@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLatestMovies, fetchLatestSeries } from '../redux/moviesSlice';
+import { fetchLatestMovies, fetchLatestSeries, fetchMovies } from '../redux/moviesSlice';
 import { useNavigate } from 'react-router-dom';
 import AddToFavoritesButton from '../componet/AddToFavoritesButton';
 import './MediaSlider.css';
@@ -8,7 +8,7 @@ import './MediaSlider.css';
 const MediaSlider = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { latestMovies, latestSeries, latestMoviesLoading, latestSeriesLoading } = useSelector(state => state.movies);
+  const { latestMovies, latestSeries, allMovies, latestMoviesLoading, latestSeriesLoading, allMoviesLoading } = useSelector(state => state.movies);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -17,8 +17,28 @@ const MediaSlider = () => {
   const progressInterval = useRef(null);
   const AUTO_PLAY_DURATION = 6000;
 
-  // Combine latest movies and series
+  // Combine data for slider
   const sliderData = useMemo(() => {
+    // 1. Check if there are manually selected slider items
+    const featuredWorks = allMovies.filter(work => work.platforms && work.platforms.some(p => p.url === 'https://arabfilmdb.com/featured_slider_flag'));
+
+    if (featuredWorks.length > 0) {
+      return featuredWorks.map(work => ({
+        id: work._id,
+        title: work.nameArabic,
+        description: work.summary || (work.type === 'series' ? 'لا يوجد وصف متاح حالياً لهذا المسلسل.' : 'لا يوجد وصف متاح حالياً لهذا العمل السينمائي.'),
+        imageUrl: work.posterUrl || work.posterImage?.url,
+        type: work.type === 'film' ? 'movie' : 'series',
+        year: work.year,
+        duration: work.type === 'film' ? (work.duration || 'غير محدد') : `${work.seasonsCount || 1} مواسم`,
+        seasons: work.seasonsCount || 1,
+        rating: work.rating || 0,
+        genre: work.genre || 'غير محدد',
+        newRelease: work.newRelease || false // Or based on year
+      }));
+    }
+
+    // 2. Fallback to latest releases logic if no slider items selected
     const movies = latestMovies.slice(0, 3).map(movie => ({
       id: movie._id,
       title: movie.nameArabic,
@@ -39,18 +59,19 @@ const MediaSlider = () => {
       imageUrl: serie.posterUrl || serie.posterImage?.url,
       type: 'series',
       year: serie.year,
-      seasons: serie.seasons || 1,
+      seasons: serie.seasonsCount || 1,
       rating: serie.rating || 0,
       genre: serie.genre || 'غير محدد',
       newRelease: true
     }));
 
     return [...movies, ...series].sort(() => Math.random() - 0.5); // Randomize mix
-  }, [latestMovies, latestSeries]);
+  }, [latestMovies, latestSeries, allMovies]);
 
   useEffect(() => {
     dispatch(fetchLatestMovies());
     dispatch(fetchLatestSeries());
+    dispatch(fetchMovies()); // Fetch all to check for slider items
   }, [dispatch]);
 
   // Auto-play logic with progress bar

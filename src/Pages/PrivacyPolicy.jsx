@@ -114,7 +114,7 @@ function PrivacyPolicy() {
                 </div>
 
                 <Footer />
-            </div>
+            </div>s
         </>
     );
 }

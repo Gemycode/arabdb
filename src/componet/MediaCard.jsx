@@ -79,7 +79,7 @@ const MediaCard = ({
             className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${isImageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
             loading="lazy"
-            src={work.posterUrl || 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=صورة+غير+متوفرة'}
+            src={work.posterUrl || work.posterImage?.url || 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=صورة+غير+متوفرة'}
             onLoad={() => setIsImageLoaded(true)}
             onError={(e) => {
               setImageError(true);
