@@ -283,9 +283,9 @@ export default function FilmForm() {
         fd.append('country', cleanedData.country);
         fd.append('filmingLocation', cleanedData.filmingLocation);
         fd.append('summary', cleanedData.summary);
-          if (cleanedData.directorImage) fd.append('directorImage', JSON.stringify(cleanedData.directorImage));
-          if (cleanedData.assistantDirectorImage) fd.append('assistantDirectorImage', JSON.stringify(cleanedData.assistantDirectorImage));
-          if (cleanedData.platforms) fd.append('platforms', JSON.stringify(cleanedData.platforms));
+        if (cleanedData.directorImage) fd.append('directorImage', JSON.stringify(cleanedData.directorImage));
+        if (cleanedData.assistantDirectorImage) fd.append('assistantDirectorImage', JSON.stringify(cleanedData.assistantDirectorImage));
+        if (cleanedData.platforms) fd.append('platforms', JSON.stringify(cleanedData.platforms));
         // seasons/episodes if series
         if (cleanedData.seasonsCount) fd.append('seasonsCount', cleanedData.seasonsCount);
         if (cleanedData.episodesCount) fd.append('episodesCount', cleanedData.episodesCount);
@@ -300,9 +300,9 @@ export default function FilmForm() {
           await workService.createWorkWithImage(fd);
           alert('تم إضافة العمل بنجاح');
           // reset form
-            setFormData({
-              type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', directorImageUrl: '', assistantDirector: '', assistantDirectorImageUrl: '', genre: '', actors: [{ name: '', imageUrl: '' }], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: '', platforms: []
-            });
+          setFormData({
+            type: 'فيلم', arabicName: '', englishName: '', year: '', director: '', directorImageUrl: '', assistantDirector: '', assistantDirectorImageUrl: '', genre: '', actors: [{ name: '', imageUrl: '' }], country: '', location: '', summary: '', posterUrl: '', seasons: '', episodes: '', platforms: []
+          });
           setSelectedImageFile(null);
           setImagePreview('');
         }
@@ -697,12 +697,13 @@ export default function FilmForm() {
 
               return (
                 <div key={idx} className="flex gap-2 mb-2 items-center">
-                      <img src={(p.name || '').toLowerCase() === 'ocn' || (p.name || '').toLowerCase() === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${(p.name||'').toLowerCase()}.svg`} alt={p.name} className="w-10 h-10 object-contain" onError={(e)=>{e.currentTarget.onerror=null; e.currentTarget.style.display='none'}} />
-                      <select value={p.name} onChange={(e) => handlePlatformChange(idx, 'name', e.target.value)} className="p-2 rounded bg-gray-700">
+                  <img src={(p.name || '').toLowerCase() === 'stctv' ? '/assets/platforms/stctv.png' : (p.name || '').toLowerCase() === 'ocn' || (p.name || '').toLowerCase() === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${(p.name || '').toLowerCase()}.svg`} alt={p.name} className="w-10 h-10 object-contain" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none' }} />
+                  <select value={p.name} onChange={(e) => handlePlatformChange(idx, 'name', e.target.value)} className="p-2 rounded bg-gray-700">
                     <option value="netflix">Netflix</option>
                     <option value="shahid">Shahid</option>
                     <option value="youtube">YouTube</option>
                     <option value="ocn">OCN</option>
+                    <option value="stctv">STC TV</option>
                   </select>
                   <input type="url" value={p.url} onChange={(e) => handlePlatformChange(idx, 'url', e.target.value)} placeholder="رابط العمل على المنصة" className="flex-1 p-2 rounded bg-gray-700" />
                   <button type="button" onClick={() => removePlatform(idx)} className="px-3 py-2 bg-red-600 rounded">حذف</button>

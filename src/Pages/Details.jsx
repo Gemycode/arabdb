@@ -431,9 +431,9 @@ const Details = () => {
                                         <div className="flex flex-wrap items-center gap-2">
                                             {selectedItem.platforms.filter(p => p.url !== 'https://arabfilmdb.com/featured_slider_flag').map((p, idx) => {
                                                 const name = (p.name || '').toLowerCase();
-                                                const label = name === 'netflix' ? 'Netflix' : name === 'shahid' ? 'Shahid' : name === 'youtube' ? 'YouTube' : name === 'ocn' ? 'OCN' : (p.name || 'Platform');
-                                                // Try to use provided SVG logo from public assets, fallback to react-icons
-                                                const logoPath = name === 'ocn' || name === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${name}.svg`;
+                                                const label = name === 'netflix' ? 'Netflix' : name === 'shahid' ? 'Shahid' : name === 'youtube' ? 'YouTube' : name === 'ocn' ? 'OCN' : name === 'stctv' ? 'STC TV' : (p.name || 'Platform');
+                                                // Try to use provided logo from public assets
+                                                const logoPath = name === 'stctv' ? '/assets/platforms/stctv.png' : name === 'ocn' || name === 'osn' ? '/assets/platforms/ocn.svg' : `/assets/platforms/${name}.svg`;
                                                 return (
                                                     <a key={idx} href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-semibold text-sm transition-all">
                                                         <img src={logoPath} alt={label} className="w-7 h-7 object-contain" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
