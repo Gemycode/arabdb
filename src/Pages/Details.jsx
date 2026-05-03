@@ -398,7 +398,7 @@ const Details = () => {
                                 <div className="space-y-2 text-center lg:text-right">
                                     <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-3">
                                         <span className="px-3 py-1 bg-amber-400/20 text-amber-400 border border-amber-400/30 rounded-full text-xs font-bold backdrop-blur-md">
-                                            {selectedItem.type === 'movie' ? 'فيلم' : 'مسلسل'}
+                                            {selectedItem.type === 'film' ? 'فيلم' : 'مسلسل'}
                                         </span>
                                         {selectedItem.year && (
                                             <span className="px-3 py-1 bg-white/10 text-white border border-white/20 rounded-full text-xs font-bold backdrop-blur-md">
