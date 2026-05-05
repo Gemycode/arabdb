@@ -103,6 +103,15 @@ function Footer() {
                                     المسلسلات
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    className="text-muted-foreground hover:text-primary transition-colors text-xl"
+                                    href="/AboutAs"
+                                    data-discover="true"
+                                >
+                                    من نحن
+                                </a>
+                            </li>
 
                         </ul>
                     </div>
@@ -115,7 +124,7 @@ function Footer() {
                                     href="/AboutAs"
                                     data-discover="true"
                                 >
-                                    عن الموقع
+                                    من نحن
                                 </a>
                             </li>
                             <li>
@@ -243,6 +252,12 @@ function Footer() {
                             href="/contact"
                         >
                             تواصل معنا
+                        </a>
+                        <a
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            href="/AboutAs"
+                        >
+                            من نحن
                         </a>
                     </div>
                 </div>

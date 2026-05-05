@@ -1,144 +1,81 @@
 import Footer from "../componet/Footer";
 import Navbar from "../componet/Navbar";
-import logo from "../assets/WhatsApp_Image_2025-09-01_at_19.08.17_1b74120e-removebg-preview.png";
-import { motion } from "framer-motion";
 
 function AboutAs() {
     return (
-        <div
-            className="min-h-screen bg-black"
-            style={{ fontFamily: "Cairo, sans-serif" }}
-        >
+        <div className="min-h-screen bg-black" style={{ fontFamily: "Cairo, sans-serif" }}>
             <Navbar />
+            <main className="max-w-6xl mx-auto px-6 py-10 mb-24 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] rounded-3xl shadow-2xl border border-neutral-800 text-white leading-loose">
+                <h1 className="text-amber-500 text-4xl md:text-5xl font-bold text-center mb-10">من نحن</h1>
 
-            {/* Logo */}
-            <div className="flex justify-center items-center flex-col py-14">
-                <motion.img
-                    initial={{ scale: 0.7, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                    src={logo}
-                    alt="Logo"
-                    className="w-[120px] drop-shadow-xl"
-                />
-            </div>
+                <section className="space-y-4 mb-8">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">نبذة عن منصة ArabFilmDB</h2>
+                    <h3 className="text-xl md:text-2xl font-semibold">المرجع الرقمي للإنتاج المرئي السعودي والعربي</h3>
+                    <p className="text-lg md:text-xl">
+                        تُمثّل منصة ArabFilmDB الوجهة الرقمية الأحدث والمرجع الأول لتوثيق وحفظ الإرث المرئي السعودي والعربي. لا تقتصر رؤيتنا على بناء قاعدة بيانات تقليدية، بل نسعى لتأسيس جسر رقمي متين يربط الجمهور وصنّاع المحتوى بأدق التفاصيل المتعلقة بصناعة الأفلام، والمسلسلات، والبرامج التلفزيونية على المستويين المحلي والإقليمي. نهدف إلى أن نكون المرجع الأوثق والأشمل الذي يوثّق مسيرة صنّاع السينما والتلفزيون من ممثلين، ومخرجين، وكتّاب، ويحتفي بإنجازاتهم.
+                    </p>
+                </section>
 
-            {/* Main Container */}
-            <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7 }}
-                className="max-w-6xl mx-auto px-6 py-12 space-y-10 mb-24 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] rounded-3xl shadow-2xl border border-neutral-800"
-            >
+                <section className="space-y-4 mb-8">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">الرؤية والرسالة</h2>
+                    <ul className="list-disc list-inside text-lg md:text-xl space-y-2">
+                        <li>
+                            الرؤية: الريادة كأكبر قاعدة بيانات مرجعية للسينما والتلفزيون على المستوى السعودي والخليجي والعربي، وفق أعلى المعايير العالمية، للمساهمة في إبراز الهوية الفنية المتميزة ودعم عجلة نمو الاقتصاد الثقافي.
+                        </li>
+                        <li>
+                            الرسالة: توفير بيئة معلوماتية تتسم بالدقة، والشفافية، وسهولة الوصول؛ لخدمة الجمهور العام والمهنيين في قطاع الإنتاج المرئي، مع إيلاء اهتمام بالغ لحماية وتوثيق الإرث الفني ومواكبة تطوره المعاصر.
+                        </li>
+                    </ul>
+                </section>
 
-                {/* Title */}
-                <h1 className="text-amber-500 text-4xl md:text-5xl font-bold text-center">
-                    عن منصة ArabFilmDB
-                </h1>
+                <section className="space-y-4 mb-8">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">المحاور الاستراتيجية (التوجه المحلي والدولي)</h2>
+                    <p className="text-lg md:text-xl">
+                        تلتزم المنصة بمواكبة مستهدفات رؤية المملكة العربية السعودية 2030 في قطاعي الترفيه والثقافة، وذلك عبر المحاور التالية:
+                    </p>
+                    <ol className="list-decimal list-inside text-lg md:text-xl space-y-2">
+                        <li>التوثيق الوطني: الأرشفة الشاملة للأفلام والمسلسلات السعودية (الروائية، الوثائقية، والقصيرة)، لضمان حفظ تاريخها الفني للأجيال القادمة.</li>
+                        <li>تمكين المبدعين: تسليط الضوء على الكوادر الوطنية من مخرجين، وممثلين، وكتّاب، ومنتجين، وربط مسيراتهم المهنية بأعمالهم الفنية وفق أحدث التقنيات الاحترافية.</li>
+                        <li>دعم الحراك السينمائي: رصد وتحليل بيانات المهرجانات السينمائية والفعاليات الثقافية داخلياً وخارجياً لتعزيز الحضور السعودي في المشهد الفني.</li>
+                    </ol>
+                </section>
 
-                {/* Description */}
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    ArabFilmDB منصة سعودية حديثة تُعنى بتجميع وتوثيق الأعمال الفنية العربية بمختلف أنواعها، من أفلام ومسلسلات وبرامج، إضافة إلى
-                    صناع المحتوى من ممثلين ومخرجين وكتّاب، وذلك ضمن قاعدة بيانات موحدة تعتمد الدقة والسهولة في الوصول للمعلومة.
-                </p>
+                <section className="space-y-4 mb-8">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">الخدمات والمميزات التقنية</h2>
+                    <p className="text-lg md:text-xl">
+                        ترتكز بنية ArabFilmDB على نظام ربط ذكي وقواعد بيانات متطورة تتيح ما يلي:
+                    </p>
+                    <ul className="list-disc list-inside text-lg md:text-xl space-y-2">
+                        <li>قاعدة بيانات مركزية: تتضمن تصنيفات دقيقة تشمل نوع العمل، وسنة الإنتاج، والجهات المنفذة.</li>
+                        <li>نظام التحقق والمصداقية: آليات صارمة لضمان دقة المعلومات المتعلقة بطواقم العمل وحفظ حقوق الملكية الفنية.</li>
+                        <li>التحديث الفوري المستمر: مواكبة أحدث الإنتاجات بشكل لحظي، لتوفير مادة مرجعية غنية للباحثين والإعلاميين والمهتمين.</li>
+                    </ul>
+                </section>
 
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    يمثل المشروع مبادرة سعودية شبابية تسعى إلى بناء مرجع موثوق يحفظ الإرث المرئي العربي ويقدمه للجمهور والمحترفين بأسلوب معاصر،
-                    وتم تطويره بالشراكة مع خبير تقني مصري ساهم في بناء الأساسات البرمجية للموقع.
-                </p>
+                <section className="space-y-4 mb-8">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">منظومة "حساب الناشر" (Publisher Account)</h2>
+                    <p className="text-lg md:text-xl">
+                        إيماناً منا بأهمية توثيق المعلومات من مصادرها الأصلية، استحدثت المنصة نظام "الناشر المعتمد" المخصص لشركات الإنتاج، وإدارات المهرجانات، وصنّاع الأفلام المستقلين. تهدف هذه المنظومة الاستراتيجية إلى تمكين الجهات الرسمية من:
+                    </p>
+                    <ul className="list-disc list-inside text-lg md:text-xl space-y-2">
+                        <li>إدارة محتواها الفني وتوثيقه بصفة معتمدة داخل قاعدة البيانات المركزية.</li>
+                        <li>تحديث المواد الترويجية (الملصقات الرسمية) والبيانات الإنتاجية لضمان وصولها الدقيق والموثوق للجمهور.</li>
+                        <li>بناء ملف تعريفي مؤسسي متكامل يعزز من التواجد الاحترافي للجهة في السوق السينمائي الرقمي.</li>
+                    </ul>
+                </section>
 
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    انطلقت الفكرة في 26 يوليو 2025 وتحوّلت إلى مشروع عملي في 1 أغسطس 2025، بجهود فردية ورؤية واضحة لإنشاء مركز معرفي رقمي متخصص
-                    يعكس تطور الصناعة الفنية في المنطقة.
-                </p>
-
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    تعمل المنصة على تقديم محتوى دقيق ومحدّث يشمل:
-                </p>
-
-                {/* List */}
-                <ul className="text-white text-lg md:text-2xl list-disc list-inside leading-loose space-y-2">
-                    <li>بيانات الأعمال الفنية</li>
-                    <li>السير المهنية لصناع المحتوى</li>
-                    <li>التقييمات</li>
-                    <li>الصور والبوسترات</li>
-                    <li>نبذات مختصرة</li>
-                    <li>روابط الإعلانات الرسمية</li>
-                    <li>طاقم العمل والمشاركين</li>
-                </ul>
-
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    وذلك بأسلوب تفاعلي يسهّل الاستكشاف والتوثيق والمشاركة.
-                </p>
-
-                <p className="text-white text-lg md:text-2xl leading-loose">
-                    ويتقدم فريق ArabFilmDB بالشكر للمبرمجين تقديراً لجهودهم التقنية ودعمهم في بناء هيكل المنصة.
-                </p>
-
-                {/* Developers */}
-                <h2 className="text-center text-3xl text-amber-400 font-bold pt-6">
-                    فريق التطوير
-                </h2>
-
-                <div className="grid md:grid-cols-3 gap-6 mt-8">
-
-                    {/* Card */}
-                    {[
-                        { name: "محمود مرسي" },
-                        { name: "عبدالله جمال" },
-                        { name: "عبدالله أحمد" }
-                    ].map((dev, index) => (
-                        <motion.div
-                            key={index}
-                            whileHover={{ scale: 1.05 }}
-                            className="flex flex-col items-center justify-center p-6 rounded-2xl
-                            bg-gradient-to-b from-[#1c1c1c] to-[#0f0f0f]
-                            shadow-lg border border-neutral-800 hover:border-amber-400 transition-all"
-                        >
-                            <div className="text-5xl mb-4">👨‍💻</div>
-                            <h3 className="text-white text-2xl font-bold mb-1">
-                                {dev.name}
-                            </h3>
-                            <p className="text-gray-400 text-lg">
-                                Full Stack Developer
-                            </p>
-                        </motion.div>
-                    ))}
-
-                </div>
-
-                {/* Contact */}
-                <p className="text-white text-xl md:text-2xl text-center pt-10 font-semibold">
-                    للاقتراحات أو التواصل:
-                </p>
-
-                <div className="grid md:grid-cols-2 gap-6 mt-6">
-
-                    {/* Email */}
-                    <div className="bg-[#111] p-6 rounded-2xl shadow-lg border border-neutral-700 hover:border-amber-500 transition-all text-center">
-                        <p className="text-gray-400 text-lg mb-2">الإيميل</p>
-                        <a
-                            href="mailto:info@arabfilmdb.com"
-                            className="text-amber-500 text-xl font-semibold hover:underline"
-                        >
-                            info@arabfilmdb.com
-                        </a>
-                    </div>
-
-                    {/* Contact Page */}
-                    <div className="bg-[#111] p-6 rounded-2xl shadow-lg border border-neutral-700 hover:border-amber-500 transition-all text-center">
-                        <p className="text-gray-400 text-lg mb-2">نموذج التواصل</p>
-                        <a
-                            href="/Contact"
-                            className="text-amber-500 text-xl font-semibold hover:underline"
-                        >
-                            اضغط هنا للتواصل معنا
-                        </a>
-                    </div>
-
-                </div>
-
-            </motion.div>
+                <section className="space-y-4">
+                    <h2 className="text-2xl md:text-3xl text-amber-400 font-bold">القيادة التنفيذية وفريق العمل</h2>
+                    <p className="text-lg md:text-xl">
+                        تُدار منصة ArabFilmDB بكفاءات سعودية شابة، بالتعاون مع خبرات تقنية عربية رائدة، لضمان تقديم تجربة مستخدم تتسم بأعلى درجات الكفاءة والاحترافية:
+                    </p>
+                    <ul className="list-disc list-inside text-lg md:text-xl space-y-2">
+                        <li>القيادة التنفيذية: الأستاذ/ منصور مباركي – المؤسس والمدير التنفيذي (Founder & CEO).</li>
+                        <li>قطاع التقنية والتطوير: يشرف على البنية التحتية للمنصة نخبة من مهندسي البرمجيات المتخصصين في هندسة الواجهات وإدارة قواعد البيانات المعقدة (منصور مباركي، محمود مرسي، عبدالله جمال، وعبدالله أحمد).</li>
+                        <li>القطاعات التشغيلية: تضم المنصة فرقاً متخصصة في إدارة وتحرير المحتوى الفني، وتوطيد العلاقات والشراكات الاستراتيجية، وتقديم الدعم الشامل لمجتمع المستخدمين.</li>
+                    </ul>
+                </section>
+            </main>
 
             <Footer />
         </div>
